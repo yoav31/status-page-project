@@ -32,3 +32,7 @@ kubectl get pods -w
 
 kubectl get pods
 kubectl logs <pod-name>
+
+
+
+kubectl get svc        כדי לגשת לכתובת האינטרנט של האתר:
