@@ -313,8 +313,9 @@ resource "aws_security_group_rule" "app_to_db" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.app_sg.id
-  source_security_group_id = aws_security_group.data_sg.id
+  security_group_id        = aws_security_group.data_sg.id
+  source_security_group_id = aws_security_group.app_sg.id
+  description              = "Allow app pods to access PostgreSQL"
 }
 
 resource "aws_security_group_rule" "app_to_redis" {
@@ -322,8 +323,9 @@ resource "aws_security_group_rule" "app_to_redis" {
   from_port                = 6379
   to_port                  = 6379
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.app_sg.id
-  source_security_group_id = aws_security_group.data_sg.id
+  security_group_id        = aws_security_group.data_sg.id
+  source_security_group_id = aws_security_group.app_sg.id
+  description              = "Allow app pods to access Redis"
 }
 
 # 5. YOAV_DATA_SG (Databases SG)
