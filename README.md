@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div align="center">
     <img alt="Status Page" src="https://cdn.herrtxbias.net/status-page/logo_gray/logo_small.png"></a>
 </div>
@@ -97,4 +96,4 @@ kubectl logs <pod-name>
 
 
 kubectl get svc        כדי לגשת לכתובת האינטרנט של האתר:
->>>>>>> cf83f0918793b3cb4ba505af4831edd43ef7239f
+
