@@ -1,10 +1,12 @@
 pipeline {
     agent any
     environment {
-        AWS_ACCOUNT_ID = '992382545251'
-        AWS_REGION     = 'us-east-1'
-        IMAGE_NAME     = 'yoav_project_ecr'
-        IMAGE_TAG      = "${BUILD_NUMBER}" 
+    AWS_ACCOUNT_ID = '992382545251'
+    AWS_REGION     = 'us-east-1'
+    IMAGE_NAME     = 'yoav_project_ecr'
+    IMAGE_TAG      = "${BUILD_NUMBER}"
+    AWS_ACCESS_KEY_ID     = credentials('aws-creds') 
+    AWS_SECRET_ACCESS_KEY = credentials('aws-creds')
     }
     stages {
         stage('Build Docker Image') {
