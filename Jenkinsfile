@@ -18,10 +18,12 @@ pipeline {
         }
         stage('Push to ECR') {
             steps {
-                script {
-                    sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}"
+                withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    script {
+                        sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382545251.dkr.ecr.us-east-1.amazonaws.com"
+                        sh "docker tag yoav_project_ecr:${BUILD_NUMBER} 992382545251.dkr.ecr.us-east-1.amazonaws.com/yoav_project_ecr:${BUILD_NUMBER}"
+                        sh "docker push 992382545251.dkr.ecr.us-east-1.amazonaws.com/yoav_project_ecr:${BUILD_NUMBER}"
+                    }
                 }
             }
         }
