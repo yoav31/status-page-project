@@ -359,7 +359,7 @@ resource "aws_security_group_rule" "db_from_nodes" {
   to_port                  = 5432
   protocol                 = "tcp"
   security_group_id        = aws_security_group.data_sg.id
-  source_security_group_id = aws_security_group.eks_node_sg.id
+  source_security_group_id = module.eks.node_security_group_id
 }
 
 # 6. EKS Node Shared SG
