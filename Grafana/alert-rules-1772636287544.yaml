@@ -1,0 +1,199 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: CPU alert
+      folder: Alerts
+      interval: 1m
+      rules:
+        - uid: cff0cql3uk4xsb
+          title: CPU Usage
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: prometheus
+              model:
+                datasource:
+                    type: prometheus
+                    uid: prometheus
+                editorMode: code
+                expr: sum(rate(container_cpu_usage_seconds_total{namespace="default", pod=~"status-page-app.*"}[5m])) by (pod) * 100
+                instant: true
+                interval: ""
+                intervalMs: 30000
+                legendFormat: '{{pod}}'
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 80
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: ad8pdj2
+          panelId: 1
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: ad8pdj2
+            __panelId__: "1"
+            description: The pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has exceeded 80% CPU usage for more than 5 minutes
+            summary: High CPU usage on {{ $labels.pod }}
+          labels:
+            type: CPU
+          isPaused: false
+          notification_settings:
+            receiver: Telegram Alerts
+    - orgId: 1
+      name: Pods alert
+      folder: Alerts
+      interval: 1m
+      rules:
+        - uid: eff0e2s0w7ta8b
+          title: Pod Status
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: prometheus
+              model:
+                datasource:
+                    type: prometheus
+                    uid: prometheus
+                expr: max by (pod) (kube_pod_status_ready{namespace="default", condition="true", pod=~"status-page-app.*"})
+                instant: true
+                interval: ""
+                intervalMs: 30000
+                legendFormat: '{{pod}}'
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: yoav-dashboard-v4
+          panelId: 3
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: yoav-dashboard-v4
+            __panelId__: "3"
+            description: The pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is no longer in 'Ready' state. Current value is {{ $values.A }}. This could be due to a crash loop or node failure.
+            summary: Pod {{ $labels.pod }} is DOWN
+          labels:
+            type: POD
+          isPaused: false
+          notification_settings:
+            receiver: Telegram Alerts
+    - orgId: 1
+      name: RAM Alerts
+      folder: Alerts
+      interval: 1m
+      rules:
+        - uid: fff0dcybj864gb
+          title: Memory Usage (%)
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: prometheus
+              model:
+                datasource:
+                    type: prometheus
+                    uid: prometheus
+                editorMode: code
+                expr: 'sum(container_memory_working_set_bytes{namespace="default", pod=~"status-page-app.*"}) by (pod) / 12800000000 '
+                instant: true
+                interval: ""
+                intervalMs: 30000
+                legendFormat: '{{pod}}'
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 80
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: yoav-dashboard-v4
+          panelId: 2
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: yoav-dashboard-v4
+            __panelId__: "2"
+            description: 'Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has exceeded 10% of total cluster memory for over 5 minutes. Current value: {{ $values.A }}%'
+            summary: High Memory Usage on {{ $labels.pod }}
+          labels:
+            type: RAM
+          isPaused: false
+          notification_settings:
+            receiver: Telegram Alerts
