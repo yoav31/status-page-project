@@ -4,7 +4,7 @@ module "eks" {
   version = "~> 20.0"
 
   cluster_name    = "yoav-terraform-eks"
-  cluster_version = "1.34"
+  cluster_version = "1.35"
   cluster_endpoint_public_access = true
 
   vpc_id     = aws_vpc.main.id
