@@ -1,12 +1,12 @@
 apiVersion: 1
 groups:
     - orgId: 1
-      name: CPU alert
+      name: Status Page Critical Alerts
       folder: Alerts
       interval: 1m
       rules:
-        - uid: cpu-status-page-v1
-          title: CPU Usage
+        - uid: sp-cpu-crit-v2
+          title: SP CPU Critical
           condition: C
           data:
             - refId: A
@@ -59,19 +59,13 @@ groups:
           annotations:
             __dashboardUid__: yoav-dashboard-v4
             __panelId__: "1"
-            description: The pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has exceeded 0.01% CPU usage for more than 5 minutes
-            summary: High CPU usage on {{ $labels.pod }}
+            description: The pod {{ $labels.pod }} has exceeded 0.01% CPU
+            summary: CPU Alert on {{ $labels.pod }}
           labels:
-            type: CPU
             severity: critical
           isPaused: false
-    - orgId: 1
-      name: Pods alert
-      folder: Alerts
-      interval: 1m
-      rules:
-        - uid: pod-status-page-v1
-          title: Pod Status
+        - uid: sp-pod-crit-v2
+          title: SP Pod Status Critical
           condition: C
           data:
             - refId: A
@@ -123,74 +117,8 @@ groups:
           annotations:
             __dashboardUid__: yoav-dashboard-v4
             __panelId__: "3"
-            description: The pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is no longer in 'Ready' state. Current value is {{ $values.A }}. This could be due to a crash loop or node failure.
-            summary: Pod {{ $labels.pod }} is DOWN
+            description: Pod {{ $labels.pod }} is DOWN
+            summary: Pod DOWN Alert
           labels:
-            type: POD
-            severity: critical
-          isPaused: false
-    - orgId: 1
-      name: RAM Alerts
-      folder: Alerts
-      interval: 1m
-      rules:
-        - uid: ram-status-page-v1
-          title: Memory Usage (%)
-          condition: C
-          data:
-            - refId: A
-              relativeTimeRange:
-                from: 300
-                to: 0
-              datasourceUid: prometheus
-              model:
-                datasource:
-                    type: prometheus
-                    uid: prometheus
-                editorMode: code
-                expr: 'sum(container_memory_working_set_bytes{namespace="default", pod=~"status-page.*"}) by (pod) / 12800000000 '
-                instant: true
-                interval: ""
-                intervalMs: 30000
-                legendFormat: '{{pod}}'
-                maxDataPoints: 43200
-                range: false
-                refId: A
-            - refId: C
-              datasourceUid: __expr__
-              model:
-                conditions:
-                    - evaluator:
-                        params:
-                            - 0.01
-                        type: gt
-                      operator:
-                        type: and
-                      query:
-                        params: []
-                      reducer:
-                        params: []
-                        type: last
-                      type: query
-                datasource:
-                    type: __expr__
-                    uid: __expr__
-                expression: A
-                intervalMs: 1000
-                maxDataPoints: 43200
-                refId: C
-                type: threshold
-          dashboardUid: yoav-dashboard-v4
-          panelId: 2
-          noDataState: NoData
-          execErrState: Error
-          for: 1m
-          annotations:
-            __dashboardUid__: yoav-dashboard-v4
-            __panelId__: "2"
-            description: 'Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has exceeded 10% of total cluster memory for over 5 minutes. Current value: {{ $values.A }}%'
-            summary: High Memory Usage on {{ $labels.pod }}
-          labels:
-            type: RAM
             severity: critical
           isPaused: false
