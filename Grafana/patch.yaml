@@ -1,0 +1,29 @@
+spec:
+  template:
+    spec:
+      volumes:
+      - name: sc-alerting-volume
+        emptyDir: {}
+      containers:
+      - name: grafana
+        volumeMounts:
+        - mountPath: /etc/grafana/provisioning/alerting
+          name: sc-alerting-volume
+      - name: grafana-sc-alerting
+        image: quay.io/kiwigrid/k8s-sidecar:2.5.0
+        env:
+        - name: METHOD
+          value: WATCH
+        - name: LABEL
+          value: grafana_alerting
+        - name: LABEL_VALUE
+          value: "1"
+        - name: FOLDER
+          value: /etc/grafana/provisioning/alerting
+        - name: RESOURCE
+          value: both
+        - name: NAMESPACE
+          value: ALL
+        volumeMounts:
+        - mountPath: /etc/grafana/provisioning/alerting
+          name: sc-alerting-volume

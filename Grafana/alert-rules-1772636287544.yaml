@@ -5,7 +5,7 @@ groups:
       folder: Alerts
       interval: 1m
       rules:
-        - uid: cff0cql3uk4xsb
+        - uid: cpu-status-page-v1
           title: CPU Usage
           condition: C
           data:
@@ -19,7 +19,7 @@ groups:
                     type: prometheus
                     uid: prometheus
                 editorMode: code
-                expr: sum(rate(container_cpu_usage_seconds_total{namespace="default", pod=~"status-page-app.*"}[5m])) by (pod) * 100
+                expr: sum(rate(container_cpu_usage_seconds_total{namespace="default", pod=~"status-page.*"}[5m])) by (pod) * 100
                 instant: true
                 interval: ""
                 intervalMs: 30000
@@ -51,13 +51,13 @@ groups:
                 maxDataPoints: 43200
                 refId: C
                 type: threshold
-          dashboardUid: ad8pdj2
+          dashboardUid: yoav-dashboard-v4
           panelId: 1
           noDataState: NoData
           execErrState: Error
           for: 1m
           annotations:
-            __dashboardUid__: ad8pdj2
+            __dashboardUid__: yoav-dashboard-v4
             __panelId__: "1"
             description: The pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has exceeded 80% CPU usage for more than 5 minutes
             summary: High CPU usage on {{ $labels.pod }}
@@ -71,7 +71,7 @@ groups:
       folder: Alerts
       interval: 1m
       rules:
-        - uid: eff0e2s0w7ta8b
+        - uid: pod-status-page-v1
           title: Pod Status
           condition: C
           data:
@@ -84,7 +84,7 @@ groups:
                 datasource:
                     type: prometheus
                     uid: prometheus
-                expr: max by (pod) (kube_pod_status_ready{namespace="default", condition="true", pod=~"status-page-app.*"})
+                expr: max by (pod) (kube_pod_status_ready{namespace="default", condition="true", pod=~"status-page.*"})
                 instant: true
                 interval: ""
                 intervalMs: 30000
@@ -136,7 +136,7 @@ groups:
       folder: Alerts
       interval: 1m
       rules:
-        - uid: fff0dcybj864gb
+        - uid: ram-status-page-v1
           title: Memory Usage (%)
           condition: C
           data:
@@ -150,7 +150,7 @@ groups:
                     type: prometheus
                     uid: prometheus
                 editorMode: code
-                expr: 'sum(container_memory_working_set_bytes{namespace="default", pod=~"status-page-app.*"}) by (pod) / 12800000000 '
+                expr: 'sum(container_memory_working_set_bytes{namespace="default", pod=~"status-page.*"}) by (pod) / 12800000000 '
                 instant: true
                 interval: ""
                 intervalMs: 30000

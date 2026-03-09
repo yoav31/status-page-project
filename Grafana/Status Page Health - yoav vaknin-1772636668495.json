@@ -251,13 +251,13 @@
       },
       {
         "current": {
-          "text": "status-page-app",
-          "value": "status-page-app"
+          "text": "status-page",
+          "value": "status-page"
         },
         "label": "Pod Name Prefix",
         "name": "pod",
         "options": [],
-        "query": "status-page-app",
+        "query": "status-page",
         "type": "custom",
         "valuesFormat": "csv"
       }

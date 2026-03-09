@@ -253,14 +253,26 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_ROOT = BASE_DIR + '/static'
-STATIC_URL = f'/{BASE_PATH}static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'project-static', 'dist'),
-    os.path.join(BASE_DIR, 'project-static', 'img'),
-    ('docs', os.path.join(BASE_DIR, 'project-static', 'docs')),  # Prefix with /docs
-)
+# STATIC_ROOT = BASE_DIR + '/static'
+# STATIC_URL = f'/{BASE_PATH}static/'
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'project-static', 'dist'),
+#     os.path.join(BASE_DIR, 'project-static', 'img'),
+#     ('docs', os.path.join(BASE_DIR, 'project-static', 'docs')),  # Prefix with /docs
+# )
+# --- S3 & Static Files Logic ---
+if hasattr(configuration, 'STATICFILES_STORAGE'):
+    STATICFILES_STORAGE = configuration.STATICFILES_STORAGE
+    AWS_STORAGE_BUCKET_NAME = configuration.AWS_STORAGE_BUCKET_NAME
+    AWS_S3_REGION_NAME = configuration.AWS_S3_REGION_NAME
+    DEFAULT_FILE_STORAGE = configuration.DEFAULT_FILE_STORAGE
+    STATIC_URL = f'http://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+    AWS_QUERYSTRING_AUTH = False
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_URL = f'/{BASE_PATH}static/'
 
+# -------------------------------
 # Media
 MEDIA_URL = '/{}media/'.format(BASE_PATH)
 

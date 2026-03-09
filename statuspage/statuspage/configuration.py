@@ -152,3 +152,12 @@ TIME_FORMAT = 'g:i a'
 SHORT_TIME_FORMAT = 'H:i:s'
 DATETIME_FORMAT = 'N j, Y g:i a'
 SHORT_DATETIME_FORMAT = 'Y-m-d H:i'
+
+#
+# S3 Storage Configuration
+#
+if os.environ.get('USE_S3', 'False').lower() == 'true':
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'us-east-1')
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
