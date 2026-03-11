@@ -1,10 +1,7 @@
 # RDS Subnet Group
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "yoav-db-subnet-group"
-  
-  # התיקון: משיכת מזהי הרשתות ישירות מתוך מודול ה-VPC שלנו
-  subnet_ids = module.vpc.database_subnets
-  
+  subnet_ids = module.vpc.database_subnets 
   tags = {
     Name = "YOAV_DB_SUBNET_GROUP"
   }
