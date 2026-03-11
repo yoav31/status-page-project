@@ -1,6 +1,7 @@
 node_modules/
 .git/
 terraform.tfstate
+.terraform/
 *.log
 dist/
 build/
