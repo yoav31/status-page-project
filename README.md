@@ -5,7 +5,7 @@ A highly available, decoupled Status Page application deployed on AWS using a mo
 This project demonstrates a complete DevOps lifecycle, from containerization to infrastructure provisioning and Kubernetes orchestration, ensuring security, scalability, and high availability.
 
 ## 🏗️ Architecture Overview
-![Status Page Architecture](./photos/Cloud Architecture.png)
+![Status Page Architecture](./photos/Cloud_Architecture.png)
 The application is built using a Microservices-style pattern based on a single mutable Docker image, orchestrated via Kubernetes, and backed by fully managed AWS services.
 
 * **Frontend/Web Tier:** Handled by Kubernetes Pods running Gunicorn, exposed to the internet via an AWS Application Load Balancer (ALB).
