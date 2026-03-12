@@ -1,64 +1,48 @@
-<div align="center">
-    <img alt="Status Page" src="https://cdn.herrtxbias.net/status-page/logo_gray/logo_small.png"></a>
-</div>
-<br />
-<p align="center">
-    <a href="https://github.com/Status-Page/Status-Page"><img alt="GitHub license" src="https://img.shields.io/github/license/Status-Page/Status-Page"></a>
-    <a href="https://github.com/Status-Page/Status-Page/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/Status-Page/Status-Page"></a>
-    <a href="https://github.com/Status-Page/Status-Page/network"><img alt="GitHub forks" src="https://img.shields.io/github/forks/Status-Page/Status-Page"></a>
-    <a href="https://github.com/Status-Page/Status-Page/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Status-Page/Status-Page"></a>
-    <a href="https://github.com/Status-Page/Status-Page/releases"><img alt="GitHub latest releas" src="https://img.shields.io/github/release/Status-Page/Status-Page"></a>
-    <a href="https://www.codacy.com/gh/Status-Page/Status-Page/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Status-Page/Status-Page&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/250b53ad99ca432cbac8d761a975b34d"/></a>
-</p>
+# ☁️ Cloud-Native Status Page Deployment
 
-# Overview
-- Components
-- Report incidents
-- JSON API
-- Metrics
-- Two Factor Authentication
-- Markdown support in incident / maintenance messages
-- Subscriptions for Notifications
-- Custom Plugins
+A highly available, decoupled Status Page application deployed on AWS using a modern Cloud-Native and Infrastructure as Code (IaC) approach. 
 
-# Requirements
-| Dependency       | Minimum Version | Optional |
-|------------------|-----------------|----------|
-| Python           | 3.10            | no       |
-| PostgreSQL       | 10              | no       |
-| Redis            | 4.0             | no       |
-| SMTP Mail Server | ---             | yes      |
+This project demonstrates a complete DevOps lifecycle, from containerization to infrastructure provisioning and Kubernetes orchestration, ensuring security, scalability, and high availability.
 
-# Installation & Updates
-Please have a look at our [Documentation](https://docs.status-page.dev/).
+## 🏗️ Architecture Overview
 
-## Versioning
-We use semantic versioning. A version number has the following structure:
-````
-v 1 . 0 . 0
-  ^   ^   ^
-  |   |   |
-  |   |   Patch (Bug fixes)
-  |   |
-  |   Minor (No breaking changes to the Software, e.g. adding new features)
-  |
-  Major (Breaking changes to the Software)
-````
+The application is built using a Microservices-style pattern based on a single mutable Docker image, orchestrated via Kubernetes, and backed by fully managed AWS services.
 
-## Documentation
-You can find the Documentation [here](https://docs.status-page.dev/).
+* **Frontend/Web Tier:** Handled by Kubernetes Pods running Gunicorn, exposed to the internet via an AWS Application Load Balancer (ALB).
+* **Asynchronous Processing:** Background tasks and scheduling are decoupled using `rqworker` and `rqscheduler`, running in dedicated Kubernetes Pods.
+* **Data Tier:** Relational data is stored securely in AWS RDS (PostgreSQL), while task queues and caching are managed by AWS ElastiCache (Redis).
+* **Static Assets:** Logos, CSS, and UI assets are offloaded to an AWS S3 Bucket to reduce Pod load and improve performance.
 
-## Other Licenses and Acknowledgements
-### Tailwind UI
-We are using Tailwind UI Components in this App. You are **NOT** allowed to reuse these Components in your own App!
+## 🚀 Key DevOps & Cloud Features
 
-See their [License](https://www.notion.so/Tailwind-UI-License-644418bb34ad4fa29aac9b82e956a867) for more information.
+* **Infrastructure as Code (IaC):** 100% of the AWS infrastructure is provisioned and managed using **Terraform**.
+* **Zero-Trust Security:** Strict AWS Security Groups are implemented. The Database and Cache tiers are completely isolated in private subnets and accept traffic *only* from the Application Security Group.
+* **Container Orchestration:** Deployed on Amazon EKS (Elastic Kubernetes Service).
+* **Resource Efficiency:** Utilizes a single Docker `Dockerfile` for the entire stack. Kubernetes deployment manifests override the container `command` entrypoint to dynamically assign roles (App, Worker, Scheduler) without bloating the ECR registry.
 
-### NetBox
-As you may have noticed, the base structure for many parts of the app is derived
-from [NetBox](https://github.com/netbox-community/netbox), this made development much easier.
-=======
-# final-project-DevOps-
+## 🛠️ Technologies Used
+
+* **Cloud Provider:** AWS (EKS, RDS, ElastiCache, S3, ECR, ALB, VPC)
+* **Infrastructure as Code:** Terraform
+* **Containerization:** Docker
+* **Orchestration:** Kubernetes (kubectl)
+* **Application Stack:** Python, Django, Redis Queue (RQ), Gunicorn
+
+## 📂 Repository Structure
+
+* `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
+* `/kubernetes/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
+* `/statuspage/` - Application source code and `Dockerfile`.
+
+## ⚙️ Deployment Guide
+
+### 1. Provision Infrastructure
+Navigate to the Terraform directory and deploy the AWS resources:
+```bash
+cd Terraform-files
+terraform init
+terraform plan
+terraform apply
 
 
 עדכון הגישה לקלאסטר (Kubeconfig)
