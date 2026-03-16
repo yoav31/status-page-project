@@ -30,7 +30,7 @@ The application is built using a Microservices-style pattern based on a single m
 ## 📂 Repository Structure
 
 * `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
-* `/kubernetes/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
+* `/EKS-deployments-files/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
 * `/statuspage/` - Application source code and `Dockerfile`.
 
 ## ⚙️ Deployment Guide
