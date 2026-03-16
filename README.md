@@ -28,8 +28,8 @@ The application is built using a Microservices-style pattern based on a single m
 
 ##  Infrastructure Components 
 * **VPC:** Custom VPC (10.0.0.0/16) with public/private subnets across 2 AZs
-Public Subnets: 10.0.1.0/24, 10.0.2.0/24 (for Load Balancers and NAT Gateway)
-Private Subnets: 10.0.3.0/24, 10.0.4.0/24 (for applications and databases)
+* Public Subnets: 10.0.1.0/24, 10.0.2.0/24 (for Load Balancers and NAT Gateway)
+* Private Subnets: 10.0.3.0/24, 10.0.4.0/24 (for applications and databases)
 
 ## 📂 Repository Structure
 * `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
