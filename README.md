@@ -13,32 +13,31 @@ The application is built using a Microservices-style pattern based on a single m
 * **Data Tier:** Relational data is stored securely in AWS RDS (PostgreSQL), while task queues and caching are managed by AWS ElastiCache (Redis).
 * **Static Assets:** Logos, CSS, and UI assets are offloaded to an AWS S3 Bucket to reduce Pod load and improve performance.
 
-## 🚀 Key DevOps & Cloud Features
-* **Infrastructure as Code (IaC):** 100% of the AWS infrastructure is provisioned and managed using **Terraform**.
+## Key DevOps & Cloud Features
+* **Infrastructure as Code (IaC):** AWS infrastructure is provisioned and managed using **Terraform**.
 * **Zero-Trust Security:** Strict AWS Security Groups are implemented. The Database and Cache tiers are completely isolated in private subnets and accept traffic *only* from the Application Security Group.
 * **Container Orchestration:** Deployed on Amazon EKS (Elastic Kubernetes Service).
 * **Resource Efficiency:** Utilizes a single Docker `Dockerfile` for the entire stack. Kubernetes deployment manifests override the container `command` entrypoint to dynamically assign roles (App, Worker, Scheduler) without bloating the ECR registry.
 
-## 🛠️ Technologies Used
+##  Technologies Used
 * **Cloud Provider:** AWS (EKS, RDS, ElastiCache, S3, ECR, ALB, VPC)
 * **Infrastructure as Code:** Terraform
 * **Containerization:** Docker
 * **Orchestration:** Kubernetes (kubectl)
 * **Application Stack:** Python, Django, Redis Queue (RQ), Gunicorn
 
-## Prerequisites
-* AWS CLI configured with appropriate permissions
-* Terraform 
-* Kubectl
-* Docker
-* Git
+##  Infrastructure Components 
+* **VPC:** Custom VPC (10.0.0.0/16) with public/private subnets across 2 AZs
+* Public Subnets: 10.0.1.0/24, 10.0.2.0/24 (for Load Balancers and NAT Gateway)
+* Private Subnets: 10.0.3.0/24, 10.0.4.0/24 (for applications and databases)
 
 ## 📂 Repository Structure
 * `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
-* `/kubernetes/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
+* `/EKS-deployments-files/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
 * `/statuspage/` - Application source code and `Dockerfile`.
 
 ## ⚙️ Deployment Guide
+
 ### 1. Provision Infrastructure
 Navigate to the Terraform directory and deploy the AWS resources:
 ```bash
