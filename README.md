@@ -60,14 +60,15 @@ terraform plan
 terraform apply
 cd ..
 ```
-### 3. Provision Infrastructure
-Navigate to the Terraform directory and deploy the AWS resources:
+### 3. CI/CD Configuration 
+Run Jenkins Container:
 ```bash
-cd Terraform-files
-terraform init
-terraform plan
-terraform apply
-cd ..
+sudo systemctl start docker
+docker run -d \
+    -p 8080:8080 -p 50000:50000 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v jenkins_home:/var/jenkins_home \
+    --name jenkins-server jenkins/jenkins:lts
 ```
 עדכון הגישה לקלאסטר (Kubeconfig)
 הפקודה הזו "מלמדת" את ה-kubectl שלך איך לדבר עם הקלאסטר החדש:
