@@ -1,4 +1,4 @@
-# ☁️ Cloud-Native Status Page Deployment
+# Cloud-Native Status Page Deployment
 
 A highly available, decoupled Status Page application deployed on AWS using a modern Cloud-Native and Infrastructure as Code (IaC) approach. 
 
@@ -38,12 +38,12 @@ The application is built using a Microservices-style pattern based on a single m
 * Docker
 * Git
 
-## 📂 Repository Structure
+## Repository Structure
 * `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
 * `/EKS-deployments-files/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
 * `/statuspage/` - Application source code and `Dockerfile`.
 
-## ⚙️ Deployment Guide
+## Deployment Guide
 
 ### 1. GitHub Repository Setup
 clone the repository
@@ -51,15 +51,24 @@ clone the repository
 git clone https://github.com/yoav31/status-page-project.git
 cd status-page-project
 ```
-### 1. Provision Infrastructure
+### 2. Provision Infrastructure
 Navigate to the Terraform directory and deploy the AWS resources:
 ```bash
 cd Terraform-files
 terraform init
 terraform plan
 terraform apply
+cd ..
 ```
-
+### 3. Provision Infrastructure
+Navigate to the Terraform directory and deploy the AWS resources:
+```bash
+cd Terraform-files
+terraform init
+terraform plan
+terraform apply
+cd ..
+```
 עדכון הגישה לקלאסטר (Kubeconfig)
 הפקודה הזו "מלמדת" את ה-kubectl שלך איך לדבר עם הקלאסטר החדש:
 aws eks update-kubeconfig --region us-east-1 --name yoav-terraform-eks
