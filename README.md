@@ -4,7 +4,7 @@ A highly available, decoupled Status Page application deployed on AWS using a mo
 
 This project demonstrates a complete DevOps lifecycle, from containerization to infrastructure provisioning and Kubernetes orchestration, ensuring security, scalability, and high availability.
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 ![Status Page Architecture](./photos/Cloud_Architecture.png)
 The application is built using a Microservices-style pattern based on a single mutable Docker image, orchestrated via Kubernetes, and backed by fully managed AWS services.
 
@@ -20,21 +20,25 @@ The application is built using a Microservices-style pattern based on a single m
 * **Resource Efficiency:** Utilizes a single Docker `Dockerfile` for the entire stack. Kubernetes deployment manifests override the container `command` entrypoint to dynamically assign roles (App, Worker, Scheduler) without bloating the ECR registry.
 
 ## 🛠️ Technologies Used
-
 * **Cloud Provider:** AWS (EKS, RDS, ElastiCache, S3, ECR, ALB, VPC)
 * **Infrastructure as Code:** Terraform
 * **Containerization:** Docker
 * **Orchestration:** Kubernetes (kubectl)
 * **Application Stack:** Python, Django, Redis Queue (RQ), Gunicorn
 
-## 📂 Repository Structure
+## Prerequisites
+* AWS CLI configured with appropriate permissions
+* Terraform 
+* Kubectl
+* Docker
+* Git
 
+## 📂 Repository Structure
 * `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
 * `/kubernetes/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
 * `/statuspage/` - Application source code and `Dockerfile`.
 
 ## ⚙️ Deployment Guide
-
 ### 1. Provision Infrastructure
 Navigate to the Terraform directory and deploy the AWS resources:
 ```bash
