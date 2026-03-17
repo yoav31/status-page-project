@@ -31,6 +31,13 @@ The application is built using a Microservices-style pattern based on a single m
 * Public Subnets: 10.0.1.0/24, 10.0.2.0/24 (for Load Balancers and NAT Gateway)
 * Private Subnets: 10.0.3.0/24, 10.0.4.0/24 (for applications and databases)
 
+## Prerequisites
+* AWS CLI 
+* Terraform 
+* Kubectl
+* Docker
+* Git
+
 ## 📂 Repository Structure
 * `/Terraform-files/` - Contains all Terraform (`.tf`) files to provision the AWS infrastructure (VPC, EKS, RDS, ElastiCache, S3, Security Groups).
 * `/EKS-deployments-files/` - Contains Kubernetes manifests (`deployment.yaml`, `service.yaml`) for the Web App, Worker, and Scheduler.
