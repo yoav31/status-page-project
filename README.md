@@ -45,6 +45,12 @@ The application is built using a Microservices-style pattern based on a single m
 
 ## ⚙️ Deployment Guide
 
+### 1. GitHub Repository Setup
+clone the repository
+```bash
+git clone https://github.com/yoav31/status-page-project.git
+cd status-page-project
+```
 ### 1. Provision Infrastructure
 Navigate to the Terraform directory and deploy the AWS resources:
 ```bash
@@ -52,7 +58,7 @@ cd Terraform-files
 terraform init
 terraform plan
 terraform apply
-
+```
 
 עדכון הגישה לקלאסטר (Kubeconfig)
 הפקודה הזו "מלמדת" את ה-kubectl שלך איך לדבר עם הקלאסטר החדש:
