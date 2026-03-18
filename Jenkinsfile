@@ -31,7 +31,14 @@ pipeline {
             steps {
                 script {
                     sh "aws eks update-kubeconfig --name yoav-terraform-eks --region ${AWS_REGION}"
-                    sh "kubectl set image deployment/status-page-app status-page-container=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}"
+                    def fullImage = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "kubectl set image deployment/status-page-app status-page-container=${fullImage}"
+                    sh "kubectl set image deployment/status-page-worker worker-container=${fullImage}"
+                    sh "kubectl set image deployment/status-page-scheduler scheduler-container=${fullImage}"
+                    
+                    sh "kubectl rollout status deployment/status-page-app"
+                    sh "kubectl rollout status deployment/status-page-worker"
+                    sh "kubectl rollout status deployment/status-page-scheduler"
                 }
             }
         }

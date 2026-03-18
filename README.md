@@ -94,17 +94,8 @@ docker run -d \
     -v jenkins_home:/var/jenkins_home \
     --name jenkins-server jenkins/jenkins:lts
 ```
-### 4. CI/CD Configuration 
-Run Jenkins as a Container:
-```bash
-sudo systemctl start docker
-docker run -d \
-    -p 8080:8080 -p 50000:50000 \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v jenkins_home:/var/jenkins_home \
-    --name jenkins-server jenkins/jenkins:lts   
-```
-### 5. Initial Jenkins Setup
+
+### 4. Initial Jenkins Setup
 1. **Start Jenkins:** Run the `docker run` command provided above.
 2. **Unlock Jenkins:** Use `docker logs jenkins-server` to get the admin password.
 3. **Create Job:** * Click **New Item** -> **Pipeline**.
@@ -112,63 +103,60 @@ docker run -d \
 4. **Link Jenkinsfile:** * Under **Pipeline**, paste your `Jenkinsfile` code.
 5. **Run:** The **Build Now** button will now be available on the left sidebar.
 
-### 6. Deploy Application 
-Option A: automatic deployment with Jenkins
+### 5. Deploy Application 
+Option A: automatic deployment with Jenkins pipeline
 ```bash
 git add .
 git commit -m "Initial deployment configuration"
 git push origin main  
 ```
-Option B: manual initial deployment
+Option B: manual initial deployment with bash script
 ```bash
 cd status-page-project
-chmod +x deploy.sh
-./deploy.sh   
+chmod +x deploy-image.sh
+./deploy.sh
+```
+
+### 6. Monitoring Stack
+Option A: Install with Helm manualy
+```bash
+kubectl create namespace monitoring
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm install kube-stack prometheus-community/kube-prometheus-stack \
+  --namespace monitoring \
+  --set grafana.adminPassword="admin" \
+  --set grafana.service.type=ClusterIP \
+  --set prometheus.service.type=ClusterIP
+helm install loki-stack grafana/loki-stack \
+  --namespace monitoring \
+  --values loki-values.yaml \
+  --set loki.service.type=ClusterIP \
+  --set promtail.enabled=true
+echo "Waiting for pods to be ready..."
+kubectl get pods -n monitoring
+```
+Option B: manual initial deployment with bash script
+```bash
+chmod +x setup-monitoring.sh
+./setup-monitoring.sh
+```
+
+### 7. Deploy Grafana dashboard and alerts
+```bash
+chmod +x deploy-grafana-config.sh
+./deploy-grafana-config.sh
+```
+### Starting port-forward to Grafana
+```bash
+kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring
+```
+enter the url in your browser:
+```bash
+http://localhost:3000
 ```
 
 
 
-
-
-
-
-
-
-
-
-עדכון הגישה לקלאסטר (Kubeconfig)
-הפקודה הזו "מלמדת" את ה-kubectl שלך איך לדבר עם הקלאסטר החדש:
-aws eks update-kubeconfig --region us-east-1 --name yoav-terraform-eks
-
-בנייה מחדש של ה־image
-נניח שה־Dockerfile שלך נמצא בתיקייה status-page:
-
-cd ~/status-page
-docker build -t yoav_project_ecr:latest .
-
-תגית לדחיפה ל־ECR
-אם כבר יש לך repository ב־ECR:
-
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 992382545251.dkr.ecr.us-east-1.amazonaws.com
-docker tag yoav_project_ecr:latest 992382545251.dkr.ecr.us-east-1.amazonaws.com/yoav_project_ecr:latest
-
-דחיפה ל־ECR
-
-docker push 992382545251.dkr.ecr.us-east-1.amazonaws.com/yoav_project_ecr:latest
-
-עדכון ה־Deployment ב־K8s
-אחרי הדחיפה, בצע rollout restart כדי שהפודים ישתמשו ב־image החדש:
-
-kubectl rollout restart deployment status-page-app
-kubectl get pods -w
-
-בדיקה
-ודא שהפודים חדשים רצים ו־CrashLoopBackOff נעלם:
-
-kubectl get pods
-kubectl logs <pod-name>
-
-
-
-kubectl get svc        כדי לגשת לכתובת האינטרנט של האתר:
 
