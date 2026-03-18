@@ -31,7 +31,13 @@ pipeline {
             steps {
                 script {
                     sh "aws eks update-kubeconfig --name yoav-terraform-eks --region ${AWS_REGION}"
+                    
+                    echo "Applying Kubernetes manifests from EKS-deployments-files..."
+                    sh "kubectl apply -f EKS-deployments-files/"
+                    
                     def fullImage = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${IMAGE_TAG}"
+                    
+                    echo "Updating deployments with new image: ${fullImage}"
                     sh "kubectl set image deployment/status-page-app status-page-container=${fullImage}"
                     sh "kubectl set image deployment/status-page-worker worker-container=${fullImage}"
                     sh "kubectl set image deployment/status-page-scheduler scheduler-container=${fullImage}"

@@ -117,7 +117,7 @@ chmod +x deploy-image.sh
 ./deploy.sh
 ```
 
-### 6. Monitoring Stack
+##  Monitoring Stack
 Option A: Install with Helm manualy
 ```bash
 kubectl create namespace monitoring
@@ -143,12 +143,13 @@ chmod +x setup-monitoring.sh
 ./setup-monitoring.sh
 ```
 
-### 7. Deploy Grafana dashboard and alerts
+#### Deploy Grafana dashboard and alerts
+
 ```bash
 chmod +x deploy-grafana-config.sh
 ./deploy-grafana-config.sh
 ```
-### Starting port-forward to Grafana
+#### Starting port-forward to Grafana
 ```bash
 kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring
 ```
@@ -158,10 +159,50 @@ http://localhost:3000
 ```
 * **Default Credentials:** User: `admin`, Password: `admin` (can be changed in the Helm install command).
 
-### 8. Telegram Alerts
+#### Telegram Alerts
 * The system is pre-configured to send critical alerts (High CPU, Pod Down) to a Telegram bot.
 * You can modify the `bottoken` and `chatid` in `Grafana/contact-points.yaml` before running the deployment script.
 
+## Verification Checklist
+Verify everything is working:
+```bash
+# ✓ All pods running
+kubectl get pods -A | grep -v Running
+
+# ✓ Application accessible
+kubectl get svc status-page-service
+
+# ✓ Database connectivity
+kubectl exec -it $(kubectl get pods -l app=status-page -o jsonpath='{.items[0].metadata.name}') -- python manage.py dbshell -c "SELECT 1;"
+
+# ✓ Redis connectivity  
+kubectl exec -it $(kubectl get pods -l app=status-page -o jsonpath='{.items[0].metadata.name}') -- python -c "import redis; r=redis.Redis(host='YOUR_REDIS_ENDPOINT', ssl=True); print(r.ping())"
+```
+
+## Troubleshooting
+### Common Issues
+* **Pod Stuck in ContainerCreating:** Check for issues with pulling images from ECR or resource constraints.
+* **Database/Redis Connection Issues:** Ensure Security Groups allow traffic between the App SG and the RDS/Redis SGs.
+* **Logs Analysis:**
+  ```bash
+  kubectl logs -f deployment/status-page-app
+  kubectl logs -f deployment/status-page-worker
+  ```
+
+## Maintenance
+* **Updating Application:** Push new code, build and push image to ECR, and run `kubectl rollout restart deployment status-page-app`.
+* **Database Maintenance:** RDS handles automated backups and maintenance windows.
+* **Scaling:** Adjust replicas in `EKS-deployments-files/deployment.yaml` and apply.
+
+## Estimated costs of the project for single month 
+* **EKS:** 
+* **EC2 Instances:**
+* **RDS:** 
+* **ElastiCache:**
+* **ALB:** 
+* **ECR:**
+* **S3 bucket:**
+  
 ## Cleanup
 To avoid incurring AWS costs, remember to destroy the infrastructure when finished:
 ```bash

@@ -49,6 +49,9 @@ echo "☸️ Starting Deployment to EKS..."
 
 aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $REGION
 
+echo "📄 Applying Kubernetes manifests from EKS-deployments-files..."
+kubectl apply -f EKS-deployments-files/
+
 echo "🔄 Updating Kubernetes deployments to image: $TAG"
 
 kubectl set image deployment/status-page-app status-page-container=$FULL_IMAGE
