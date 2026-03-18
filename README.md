@@ -95,7 +95,7 @@ docker run -d \
     --name jenkins-server jenkins/jenkins:lts
 ```
 ### 4. CI/CD Configuration 
-Run Jenkins Container:
+Run Jenkins as a Container:
 ```bash
 sudo systemctl start docker
 docker run -d \
@@ -112,12 +112,19 @@ docker run -d \
 4. **Link Jenkinsfile:** * Under **Pipeline**, paste your `Jenkinsfile` code.
 5. **Run:** The **Build Now** button will now be available on the left sidebar.
 
-### 6.  
+### 6. Deploy Application 
+Option A: automatic deployment with Jenkins
 ```bash
-  
+git add .
+git commit -m "Initial deployment configuration"
+git push origin main  
 ```
-
-
+Option B: manual initial deployment
+```bash
+cd status-page-project
+chmod +x deploy.sh
+./deploy.sh   
+```
 
 
 
