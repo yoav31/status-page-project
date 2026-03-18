@@ -156,7 +156,15 @@ enter the url in your browser:
 ```bash
 http://localhost:3000
 ```
+* **Default Credentials:** User: `admin`, Password: `admin` (can be changed in the Helm install command).
 
+### 8. Telegram Alerts
+* The system is pre-configured to send critical alerts (High CPU, Pod Down) to a Telegram bot.
+* You can modify the `bottoken` and `chatid` in `Grafana/contact-points.yaml` before running the deployment script.
 
-
-
+## Cleanup
+To avoid incurring AWS costs, remember to destroy the infrastructure when finished:
+```bash
+cd Terraform-files
+terraform destroy -auto-approve
+```
