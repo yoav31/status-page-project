@@ -55,6 +55,12 @@ The application is built using a Microservices-style pattern based on a single m
     * Clustered mode enabled for seamless horizontal scaling
     * Automated snapshots for data durability and recovery
 
+## Network Security
+* VPC: Isolated network environment (10.0.0.0/16)
+* Security Groups: Least-privilege access between components
+* Private Subnets: Database and cache in private subnets only
+* Secrets Management: AWS Secrets Manager
+
 ## Prerequisites
 * AWS CLI 
 * Terraform 
@@ -151,7 +157,7 @@ chmod +x deploy-grafana-config.sh
 ```
 #### Starting port-forward to Grafana
 ```bash
-kubectl port-forward svc/monitoring-grafana 3000:80 -n monitoring
+kubectl port-forward -n monitoring svc/kube-stack-grafana 3000:80
 ```
 enter the url in your browser:
 ```bash
@@ -194,18 +200,24 @@ kubectl exec -it $(kubectl get pods -l app=status-page -o jsonpath='{.items[0].m
 * **Database Maintenance:** RDS handles automated backups and maintenance windows.
 * **Scaling:** Adjust replicas in `EKS-deployments-files/deployment.yaml` and apply.
 
-## Estimated costs of the project for single month 
-* **EKS:** 
-* **EC2 Instances:**
-* **RDS:** 
-* **ElastiCache:**
-* **ALB:** 
-* **ECR:**
-* **S3 bucket:**
-  
 ## Cleanup
 To avoid incurring AWS costs, remember to destroy the infrastructure when finished:
 ```bash
 cd Terraform-files
 terraform destroy -auto-approve
 ```
+## Estimated costs of the project for single month 
+* **EKS:** 72$
+* **EC2 Instances:** 3x t3.medium ~ 90$
+* **RDS:** t4.micro ~14$
+* **ElastiCache:** t3.medium ~ 50$
+* **ALB:** ~ 18$
+* **ECR & S3:** ~10$
+### total cost:  ~254$
+
+
+
+http://ae49a2d46f01346a7bb8c4d2e8927204-696335504.us-east-1.elb.amazonaws.com/dashboard
+
+
+http://ae49a2d46f01346a7bb8c4d2e8927204-696335504.us-east-1.elb.amazonaws.com
