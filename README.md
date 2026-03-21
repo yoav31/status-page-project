@@ -142,7 +142,7 @@ helm install loki-stack grafana/loki-stack \
   --values loki-values.yaml \
   --set loki.service.type=ClusterIP \
   --set promtail.enabled=true
-echo "Waiting for pods to be ready... Watch the magic happen:"
+echo "Waiting for pods to be ready..."
 kubectl get pods -n monitoring -w
 cd ..
 ```
@@ -196,6 +196,7 @@ kubectl exec -it $(kubectl get pods -l app=status-page -o jsonpath='{.items[0].m
   ```bash
   kubectl logs -f deployment/status-page-app
   kubectl logs -f deployment/status-page-worker
+  kubectl logs -f deployment/status-page-scheduler
   ```
 
 ## Maintenance
