@@ -126,6 +126,7 @@ chmod +x deploy-image.sh
 ##  Monitoring Stack
 Option A: Install with Helm manualy
 ```bash
+cd Grafana
 kubectl create namespace monitoring
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -134,14 +135,16 @@ helm install kube-stack prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --set grafana.adminPassword="admin" \
   --set grafana.service.type=ClusterIP \
-  --set prometheus.service.type=ClusterIP
+  --set prometheus.service.type=ClusterIP \
+  -f grafana-values.yaml
 helm install loki-stack grafana/loki-stack \
   --namespace monitoring \
   --values loki-values.yaml \
   --set loki.service.type=ClusterIP \
   --set promtail.enabled=true
-echo "Waiting for pods to be ready..."
-kubectl get pods -n monitoring
+echo "Waiting for pods to be ready... Watch the magic happen:"
+kubectl get pods -n monitoring -w
+cd ..
 ```
 Option B: manual initial deployment with bash script
 ```bash

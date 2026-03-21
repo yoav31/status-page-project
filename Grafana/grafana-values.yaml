@@ -1,14 +1,51 @@
-datasources:
-  datasources.yaml:
-    apiVersion: 1
-    datasources:
-      - name: Prometheus
-        type: prometheus
-        access: proxy
-        url: http://prometheus-server:9090
-        isDefault: true
+grafana:
+  adminPassword: "admin"
+  
+  persistence:
+    enabled: false
 
-      - name: Loki
-        type: loki
-        access: proxy
-        url: http://loki:3100
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki-stack:3100
+      isDefault: false
+
+  alerting:
+    contactPoints:
+      apiVersion: 1
+      contactPoints:
+        - name: telegram-alerts
+          receivers:
+            - type: telegram
+              settings:
+                bottoken: "8615998851:AAFKypK1CsuGqvpi3ykig1h8pg0AZmfq73g"
+                chatid: "-5207549205"
+
+    rules:
+      apiVersion: 1
+      groups:
+        - orgId: 1
+          name: StatusPageAlerts
+          folder: Alerts
+          interval: 1m
+          rules:
+            - uid: cpu-alert-v1
+              title: High CPU Usage
+              condition: C
+              for: 1m
+              data:
+                - refId: A
+                  datasourceUid: prometheus
+                  model:
+                    expr: sum(rate(container_cpu_usage_seconds_total{namespace="default", pod=~"status-page.*"}[5m])) by (pod) * 100
+                - refId: C
+                  datasourceUid: __expr__
+                  model:
+                    type: threshold
+                    expression: A
+                    conditions:
+                      - evaluator: {params: [0.01], type: gt}
+                        operator: {type: and}
+                        query: {params: []}
+                        reducer: {type: last}
