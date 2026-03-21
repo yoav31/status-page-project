@@ -2,9 +2,9 @@ import importlib
 import os
 import sys
 import platform
-
+import boto3
 from django.core.exceptions import ImproperlyConfigured
-
+import json
 from statuspage.config import PARAMS
 
 VERSION = '2.0.17-dev'
@@ -18,7 +18,23 @@ if sys.version_info < (3, 10):
         f"Status-Page requires Python 3.10 or later. (Currently installed: Python {platform.python_version()})"
     )
 
+def get_db_password():
+    secret_name = "prod/status-page/rds-credentials" 
+    region_name = "us-east-1" 
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+    try:
+        response = client.get_secret_value(SecretId=secret_name)
+        secret = json.loads(response['SecretString'])
+        return secret['password']
+    except Exception as e:
+        print(f"Error retrieving secret: {e}")
+        return os.environ.get('DB_PASSWORD', 'default_fallback')
 
+DB_PASSWORD = get_db_password()
 config_path = os.getenv('STATUS_PAGE_CONFIGURATION', 'statuspage.configuration')
 try:
     configuration = importlib.import_module(config_path)

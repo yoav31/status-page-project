@@ -28,4 +28,4 @@ typing-extensions==4.4.0
 rq==1.11.1
 whitenoise==6.3.0
 django-storages==1.13.2
-boto3==1.26.0
+boto3==1.34.0

@@ -1,9 +1,27 @@
 import os
+import boto3
+import json
+from botocore.exceptions import ClientError
 
 #
 # Required Settings
 #
+def get_aws_db_password():
+    secret_name = "prod/status-page/rds-credentials"
+    region_name = os.environ.get('AWS_S3_REGION_NAME', 'us-east-1')
 
+    try:
+        # התחברות ל-AWS תוך שימוש בהרשאות ה-IAM של הפוד
+        session = boto3.session.Session()
+        client = session.client(service_name='secretsmanager', region_name=region_name)
+        
+        response = client.get_secret_value(SecretId=secret_name)
+        secret = json.loads(response['SecretString'])
+        return secret['password']
+    except Exception as e:
+        print(f"⚠️ Warning: Failed to fetch secret from AWS: {e}")
+        # גיבוי: אם AWS למטה או אין הרשאה, נסה לקחת ממשתנה סביבה כרגיל
+        return os.environ.get('DB_PASSWORD', 'postgres')
 # This is a list of valid fully-qualified domain names (FQDNs) for the Status-Page server. Status-Page will not permit
 # write access to the server via any other hostnames. The first FQDN in the list will be treated as the preferred name.
 #
@@ -16,7 +34,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 DATABASE = {
     'NAME': os.environ.get('DB_NAME', 'postgres'),
     'USER': os.environ.get('DB_USER', 'postgres'),
-    'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+    'PASSWORD': get_aws_db_password(),
     'HOST': os.environ.get('DB_HOST', 'db'),
     'PORT': os.environ.get('DB_PORT', '5432'),
     'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', 300)),

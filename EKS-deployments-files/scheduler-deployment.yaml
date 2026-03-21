@@ -34,8 +34,7 @@ spec:
         - name: DB_USER
           value: postgres
 
-        - name: DB_PASSWORD
-          value: '#Aa123456#'
+
 
         - name: ALLOWED_HOSTS
           value: "*"
