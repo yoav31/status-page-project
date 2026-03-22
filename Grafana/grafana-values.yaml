@@ -19,8 +19,8 @@ grafana:
           receivers:
             - type: telegram
               settings:
-                bottoken: "8615998851:AAFKypK1CsuGqvpi3ykig1h8pg0AZmfq73g"
-                chatid: "-5207549205"
+                bottoken: <your_bot_token>
+                chatid: <your_chat_id>
 
     rules:
       apiVersion: 1
