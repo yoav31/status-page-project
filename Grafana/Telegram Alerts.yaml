@@ -6,8 +6,8 @@ contactPoints:
         - uid: afezus974bri8c
           type: telegram
           settings:
-            bottoken: 8615998851:AAFKypK1CsuGqvpi3ykig1h8pg0AZmfq73g
-            chatid: "-5207549205"
+            bottoken: <your token>
+            chatid: <your chat id>
             disable_notification: false
             disable_web_page_preview: false
             protect_content: false
