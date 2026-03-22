@@ -220,8 +220,3 @@ terraform destroy -auto-approve
 ### total cost:  ~254$
 
 
-
-http://ae49a2d46f01346a7bb8c4d2e8927204-696335504.us-east-1.elb.amazonaws.com/dashboard
-
-
-http://ae49a2d46f01346a7bb8c4d2e8927204-696335504.us-east-1.elb.amazonaws.com
