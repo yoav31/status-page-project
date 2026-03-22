@@ -12,3 +12,4 @@ contactPoints:
             disable_web_page_preview: false
             protect_content: false
           disableResolveMessage: false
+#edit the bottoken and chatid with your own values
