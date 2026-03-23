@@ -14,33 +14,46 @@ spec:
     spec:
       containers:
       - name: worker-container
-        image: 992382545251.dkr.ecr.us-east-1.amazonaws.com/yoav_project_ecr:latest
+        image: <your-ECR-url>/yoav-statuspage:latest # Replace with your actual ECR image URL
         imagePullPolicy: Always
         command: ["python", "manage.py", "rqworker"]
 
         env:
         - name: REDIS_HOST
-          value: master.yoav-redis-subnet-group.7fftml.use1.cache.amazonaws.com
+          value: <your-redis-endpoint> # Replace with your actual Redis endpoint
 
         - name: REDIS_PORT
           value: "6379"
 
         - name: DB_HOST
-          value: yoav-project-db.cx248m4we6k7.us-east-1.rds.amazonaws.com
+          value: <your-db-endpoint> # Replace with your actual DB endpoint
 
         - name: DB_NAME
-          value: postgres
-          
+          value: statuspage
+
         - name: DB_USER
-          value: postgres
+          value: yoav_admin
 
-
+        - name: DB_PASSWORD
+          value: <your-db-password> # Replace with your actual DB password or use Kubernetes Secrets for better security or amazon secrets manager
 
         - name: ALLOWED_HOSTS
           value: "*"
 
+        - name: GUNICORN_CMD_ARGS
+          value: "--bind 0.0.0.0:8000 --timeout 300"
+
         - name: DEBUG
           value: "True"
-          
+
         - name: REDIS_SSL
-          value: "True"
+          value: "False"
+
+        - name: AWS_STORAGE_BUCKET_NAME
+          value: <your-s3-bucket-name> # Replace with your actual S3 bucket name
+
+        - name: AWS_S3_REGION_NAME
+          value: "us-east-1"
+          
+        - name: USE_S3
+          value: "True"  
