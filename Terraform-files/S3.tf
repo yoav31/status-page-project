@@ -6,7 +6,7 @@ resource "random_id" "bucket_id" {
 # S3 Bucket
 resource "aws_s3_bucket" "project_bucket" {
   bucket = "yoav-project-s3-${random_id.bucket_id.hex}"
-
+  force_destroy = true
   tags = {
     Name = "yoav-project-s3"
   }
