@@ -90,7 +90,20 @@ terraform plan
 terraform apply
 cd ..
 ```
-### 3. CI/CD Configuration 
+### 3. Update kubeconfig
+```bash
+aws eks update-kubeconfig --region us-east-1 --name yoav-project-cluster
+kubectl get nodes
+```
+### 4. Running migrations on the RDS
+```bash
+kubectl exec -it <name of one pod> -- python manage.py migrate
+```
+### 5. Uploading static files to S3
+```bash
+kubectl exec -it <name of one pod> -- python manage.py collectstatic --noinput
+```
+### 6. CI/CD Configuration 
 Run Jenkins Container:
 ```bash
 sudo systemctl start docker
@@ -101,7 +114,7 @@ docker run -d \
     --name jenkins-server jenkins/jenkins:lts
 ```
 
-### 4. Initial Jenkins Setup
+### 7. Initial Jenkins Setup
 1. **Start Jenkins:** Run the `docker run` command provided above.
 2. **Unlock Jenkins:** Use `docker logs jenkins-server` to get the admin password.
 3. **Create Job:** * Click **New Item** -> **Pipeline**.
@@ -109,7 +122,7 @@ docker run -d \
 4. **Link Jenkinsfile:** * Under **Pipeline**, paste your `Jenkinsfile` code.
 5. **Run:** The **Build Now** button will now be available on the left sidebar.
 
-### 5. Deploy Application 
+### 8. Deploy Application 
 Option A: automatic deployment with Jenkins pipeline
 ```bash
 git add .
