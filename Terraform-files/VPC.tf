@@ -15,7 +15,14 @@ module "vpc" {
 
   database_subnets      = ["10.0.21.0/24", "10.0.22.0/24"]
   database_subnet_names = ["YOAV_PRIVATE_SUBNET_DATA1", "YOAV_PRIVATE_SUBNET_DATA2"]
-
+  create_database_subnet_route_table = true
+  create_database_nat_gateway_route = false
+  igw_tags = {
+      Name = "yoav_project_igw"
+    }
+  nat_gateway_tags = {
+    Name = "yoav_project_nat"
+  }  
   enable_nat_gateway = true
   single_nat_gateway = true
 
