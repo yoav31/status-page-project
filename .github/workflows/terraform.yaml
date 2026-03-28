@@ -1,0 +1,83 @@
+name: 'Terraform IaC & Security Pipeline'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Terraform-files/**'
+      - 'Terraform-policies/**' 
+      - '.github/workflows/terraform.yml'
+  pull_request:
+    paths:
+      - 'Terraform-files/**'
+      - 'Terraform-policies/**'
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  terraform-and-security:
+    name: 'Terraform & Checkov'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./Terraform-files
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Checkov Security Scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ./Terraform-files
+          framework: terraform
+          soft_fail: true 
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out=tfplan -no-color
+
+      - name: Convert Plan to JSON
+        run: terraform show -json tfplan > tfplan.json
+
+      - name: Setup OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run OPA Policy Check
+        run: |
+          echo "Evaluating OPA policies..."
+          RESULT=$(opa eval --format pretty --data ../policies/ --input tfplan.json "data.terraform.deny")
+          
+          if [ "$RESULT" != "[]" ] && [ -n "$RESULT" ]; then
+            echo "OPA Policy violations found: $RESULT"
+            exit 1
+          else
+            echo "OPA Policy check passed successfully!"
+          fi
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false

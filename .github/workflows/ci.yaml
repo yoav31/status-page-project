@@ -2,9 +2,15 @@ name: CI Pipeline (Build & Push)
 
 on:
   push:
-    branches:
-      - main
-
+    branches: [ "main" ]
+    paths:
+      - 'status-page/**' 
+      - 'EKS-deployments-files/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    paths:
+      - 'status-page/**' 
+      - 'EKS-deployments-files/**'    
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: <your-ecr-repository-name>
