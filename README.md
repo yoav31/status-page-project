@@ -104,7 +104,7 @@ kubectl exec -it <name of one pod> -- python manage.py migrate
 kubectl exec -it <name of one pod> -- python manage.py collectstatic --noinput
 ```
 ### 6. CI/CD Configuration 
-Run Jenkins Container:
+Option A: Run Jenkins Container:
 ```bash
 sudo systemctl start docker
 docker run -d \
@@ -113,8 +113,17 @@ docker run -d \
     -v jenkins_home:/var/jenkins_home \
     --name jenkins-server jenkins/jenkins:lts
 ```
+Option B: Github Action for CI & ArgoCD for CD
+```bash
+#You hava .github folder for Github Action for CI. edit the ci.yaml
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl get svc argocd-server -n argocd  #you got the url, enter it in the broswer
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d   #the output is the password,  the username is "admin" 
+```
 
-### 7. Initial Jenkins Setup
+###  Initial Jenkins Setup 
 1. **Start Jenkins:** Run the `docker run` command provided above.
 2. **Unlock Jenkins:** Use `docker logs jenkins-server` to get the admin password.
 3. **Create Job:** * Click **New Item** -> **Pipeline**.
@@ -122,7 +131,7 @@ docker run -d \
 4. **Link Jenkinsfile:** * Under **Pipeline**, paste your `Jenkinsfile` code.
 5. **Run:** The **Build Now** button will now be available on the left sidebar.
 
-### 8. Deploy Application 
+### 7. Deploy Application 
 Option A: automatic deployment with Jenkins pipeline
 ```bash
 git add .
