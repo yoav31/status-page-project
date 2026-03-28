@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: yoav_project_ecr
+  ECR_REPOSITORY: <your-ecr-repository-name>
 
 jobs:
   build-and-update-manifest:

@@ -115,7 +115,7 @@ docker run -d \
 ```
 Option B: Github Action for CI & ArgoCD for CD
 ```bash
-#You hava .github folder for Github Action for CI. edit the ci.yaml
+#.github folder for Github Action for CI. edit the ci.yaml for your aws account and github 
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
